@@ -375,6 +375,9 @@
         "outbound": "🎯 全球直连"
       },
       {
+        "action": "resolve"
+      },
+      {
         "rule_set": "geoip-google",
         "outbound": "🍀 Google"
       },
