@@ -35,6 +35,10 @@
         "server": "fakeip"
       },
       {
+        "query_type": "HTTPS",
+        "action": "reject"
+      },
+      {
         "domain_suffix": [
           "services.googleapis.cn",
           "googleapis.cn",
