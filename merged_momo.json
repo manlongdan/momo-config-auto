@@ -39,19 +39,7 @@
         "action": "reject"
       },
       {
-        "domain_suffix": [
-          "services.googleapis.cn",
-          "googleapis.cn",
-          "xn--ngstr-lra8j.com"
-        ],
-        "server": "foreign"
-      },
-      {
-        "rule_set": [
-          "geosite-cn",
-          "geosite-steamcn",
-          "geosite-apple"
-        ],
+        "rule_set": "geosite-fakeipfilter",
         "server": "local"
       },
       {
@@ -61,10 +49,15 @@
         ],
         "server": "fakeip",
         "rewrite_ttl": 1
+      },
+      {
+        "rule_set": "geosite-cn",
+        "server": "local"
       }
     ],
     "final": "foreign",
-    "strategy": "ipv4_only",
+    "client_subnet": "223.5.5.0/24",
+    "strategy": "prefer_ipv4",
     "independent_cache": true,
     "reverse_mapping": true
   },
@@ -403,6 +396,13 @@
       }
     ],
     "rule_set": [
+      {
+        "tag": "geosite-fakeipfilter",
+        "type": "remote",
+        "format": "source",
+        "url": "https://gh-proxy.com/https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/fakeipfilter.json",
+        "download_detour": "🎯 全球直连"
+      },
       {
         "tag": "geosite-ai",
         "type": "remote",
