@@ -27,6 +27,10 @@
     ],
     "rules": [
       {
+        "rule_set": "my_direct",
+        "server": "local"
+      },
+      {
         "clash_mode": "direct",
         "server": "local"
       },
@@ -78,10 +82,10 @@
       "tag": "🧠 AI",
       "type": "selector",
       "outbounds": [
+        "🐸 手动选择",
         "🇯🇵 日本手动",
         "🇸🇬 狮城手动",
-        "🇺🇲 美国手动",
-        "🐸 手动选择"
+        "🇺🇲 美国手动"
       ]
     },
     {
@@ -284,6 +288,10 @@
   "route": {
     "rules": [
       {
+        "rule_set": "my_direct",
+        "outbound": "🎯 全球直连"
+      },
+      {
         "action": "sniff",
         "sniffer": [
           "http",
@@ -389,10 +397,6 @@
       },
       {
         "rule_set": "geoip-cn",
-        "outbound": "🎯 全球直连"
-      },
-      {
-        "rule_set": "my_direct",
         "outbound": "🎯 全球直连"
       }
     ],
