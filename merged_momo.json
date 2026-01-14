@@ -27,10 +27,6 @@
     ],
     "rules": [
       {
-        "rule_set": "my_direct",
-        "server": "local"
-      },
-      {
         "clash_mode": "direct",
         "server": "local"
       },
@@ -288,10 +284,6 @@
   "route": {
     "rules": [
       {
-        "rule_set": "my_direct",
-        "outbound": "🎯 全球直连"
-      },
-      {
         "action": "sniff",
         "sniffer": [
           "http",
@@ -397,6 +389,10 @@
       },
       {
         "rule_set": "geoip-cn",
+        "outbound": "🎯 全球直连"
+      },
+      {
+        "rule_set": "my_direct",
         "outbound": "🎯 全球直连"
       }
     ],
