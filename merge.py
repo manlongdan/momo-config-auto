@@ -45,7 +45,7 @@ if "outbounds" in base:
             break
 
 # =======================================================
-# 3. 合并 rule_set
+# 3. 合并 rule_set (资源集)
 # =======================================================
 base_route = base.setdefault("route", {})
 custom_route = custom.get("route", {})
@@ -57,7 +57,7 @@ base_rule_sets.update(custom_rule_sets)
 base_route["rule_set"] = list(base_rule_sets.values())
 
 # =======================================================
-# 4. 合并路由规则 (Rules)
+# 4. 合并路由规则 (Route Rules)
 # =======================================================
 base_rules = base_route.get("rules", [])
 custom_rules = custom_route.get("rules", [])
@@ -65,23 +65,25 @@ custom_rules = custom_route.get("rules", [])
 # 确保自定义路由规则优先级最高
 final_rules = custom_rules + base_rules
 base_route["rules"] = final_rules
-print(f"✅ 路由规则合并完毕: 自定义规则优先")
+print(f"✅ 路由规则合并完毕: 自定义规则({len(custom_rules)}) 优先")
 
 # =======================================================
-# 4.1 【新增】注入 DNS 规则 (让直连域名走国内DNS)
+# 5. 【新增】合并 DNS 规则 (DNS Rules)
 # =======================================================
-if "dns" in base and "rules" in base["dns"]:
-    # 定义一条新的 DNS 规则：my_direct -> local DNS
-    new_dns_rule = {"rule_set": "my_direct", "server": "local"}
+# 只有当 custom 里写了 dns 规则时才执行
+if "dns" in custom and "rules" in custom["dns"]:
+    base_dns = base.setdefault("dns", {})
+    base_dns_rules = base_dns.get("rules", [])
+    custom_dns_rules = custom["dns"]["rules"]
     
-    # 将其插入到 DNS 规则列表的第一位，确保绝对优先
-    base["dns"]["rules"].insert(0, new_dns_rule)
-    print(f"✅ DNS 规则注入完毕: 'my_direct' 强制走 local DNS")
+    # 逻辑：自定义 DNS 规则插入到最前面，确保优先匹配
+    base_dns["rules"] = custom_dns_rules + base_dns_rules
+    print(f"✅ DNS 规则合并完毕: 您的直连 DNS 规则已生效")
 else:
-    print(f"⚠️ 警告: 未找到 DNS 配置段，跳过 DNS 规则注入")
+    print(f"ℹ️ 提示: 自定义配置中未发现 DNS 规则，跳过合并")
 
 # =======================================================
-# 5. 输出
+# 6. 输出
 # =======================================================
 output_filename = "merged_momo.json"
 with open(output_filename, "w", encoding="utf-8") as f:
