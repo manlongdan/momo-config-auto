@@ -21,29 +21,38 @@ except Exception as e:
     exit(1)
 
 # =======================================================
-# 2. 【核心修改】动态修改 "🧠 AI" 出站组
+# 2. 【核心修改】动态调整 "🐸 手动选择" 到首位
 # =======================================================
+# 改动点：逻辑改为遍历所有组，包含即置顶；针对 AI 组若缺失则强制首位插入。
 target_tag = "🧠 AI"
-new_outbound = "🐸 手动选择"
-modified = False
+manual_node = "🐸 手动选择"
+modified_count = 0
 
 if "outbounds" in base:
     for outbound in base["outbounds"]:
-        # 找到 tag 为 "🧠 AI" 的 selector
-        if outbound.get("tag") == target_tag:
-            # 确保该项有 outbounds 列表
-            if "outbounds" in outbound and isinstance(outbound["outbounds"], list):
-                # 防止重复添加
-                if new_outbound not in outbound["outbounds"]:
-                    outbound["outbounds"].append(new_outbound)
-                    modified = True
-                    print(f"✅ 成功: 已将 '{new_outbound}' 添加到 '{target_tag}' 组")
-                else:
-                    print(f"ℹ️ 提示: '{target_tag}' 组中已包含 '{new_outbound}'，跳过添加")
-            break
+        # 仅处理包含子出站列表的组 (Selector/URLTest)
+        if "outbounds" in outbound and isinstance(outbound["outbounds"], list):
+            ob_list = outbound["outbounds"]
+            group_tag = outbound.get("tag", "未命名组")
+            
+            # 情况A：针对 "🧠 AI" 组，如果完全没有，则强制在首位插入
+            if group_tag == target_tag and manual_node not in ob_list:
+                ob_list.insert(0, manual_node)
+                print(f"✅ [新增] 已将 '{manual_node}' 插入到 '{group_tag}' 的首位")
+                modified_count += 1
+                continue # 插入后即为第一，无需后续移动操作
 
-if not modified:
-    print(f"⚠️ 警告: 未能在 base 配置中找到 '{target_tag}' 或修改失败")
+            # 情况B：针对所有组（含AI），如果已存在但不在第一位，则移动到首位
+            if manual_node in ob_list:
+                current_index = ob_list.index(manual_node)
+                if current_index != 0:
+                    ob_list.pop(current_index) # 移除旧位置
+                    ob_list.insert(0, manual_node) # 插入到头部
+                    print(f"🔄 [调整] '{group_tag}' 组: '{manual_node}' 已移动到首位")
+                    modified_count += 1
+
+if modified_count == 0:
+    print("ℹ️ 未进行任何修改（可能所有组已符合要求）")
 # =======================================================
 
 
