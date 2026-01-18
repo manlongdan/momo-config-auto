@@ -284,10 +284,6 @@
   "route": {
     "rules": [
       {
-        "rule_set": "my_direct",
-        "outbound": "🎯 全球直连"
-      },
-      {
         "action": "sniff",
         "sniffer": [
           "http",
@@ -299,6 +295,10 @@
       {
         "inbound": "dns-in",
         "action": "hijack-dns"
+      },
+      {
+        "rule_set": "my_direct",
+        "outbound": "🎯 全球直连"
       },
       {
         "ip_is_private": true,
